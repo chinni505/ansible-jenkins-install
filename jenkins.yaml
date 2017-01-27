@@ -1,0 +1,20 @@
+---
+- hosts: all
+  vars:
+    tomcat_deploy_path: /var/lib/tomcat/webapps/
+  become: yes
+  tasks:
+
+  - name: install java,tomcat pakage
+    yum: name={{ item }} state=present
+    items:
+    - java
+    - tomcat
+
+  - name: jenkins war file download
+    get_url:
+      url: http://mirrors.jenkins.io/war-stable/latest/jenkins.war
+      dest: "{{ tomcat_deploy_path }}"
+  
+  - name: service tomcat service
+    service: name=tomcat state=restarted 
